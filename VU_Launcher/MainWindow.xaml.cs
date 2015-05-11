@@ -26,6 +26,20 @@ namespace WpfApplication1
             InitializeComponent();
         }
 
+        // Launch Venice with the selected freq.
+        private void launchVenice(String frequency, String vu_path)
+        {
+            if (checkBox.IsChecked == false)
+            {
+                System.Diagnostics.Process.Start(vu_path, "-high" + frequency);
+            }
+            // Launch VU Server
+            else if (checkBox.IsChecked == true)
+            {
+                System.Diagnostics.Process.Start(vu_path, "-server -dedicated -high" + frequency);
+            }
+        }
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             // Getting VU/BF3 install path 
@@ -44,41 +58,17 @@ namespace WpfApplication1
             // In case of 30Hz...
             if (radioButton.IsChecked == true)
             {
-                if (checkBox.IsChecked == false)
-                {
-                    System.Diagnostics.Process.Start(vu_path);
-                }  
-                // Launch VU Server at 30Hz
-                else if (checkBox.IsChecked == true)
-                {
-                    System.Diagnostics.Process.Start(vu_path, "-server -dedicated");
-                }
+                launchVenice("30", vu_path);
             }
             // In case of 60Hz...
             else if (radioButton1.IsChecked == true)
             {
-                if (checkBox.IsChecked == false)
-                {
-                    System.Diagnostics.Process.Start(vu_path, "-high60");
-                }
-                // Launch VU Server at 60Hz
-                else if (checkBox.IsChecked == true)
-                {
-                    System.Diagnostics.Process.Start(vu_path, "-server -dedicated -high60");
-                }
+                launchVenice("60", vu_path);
             }
             // In case of 120Hz...
             else if (radioButton2.IsChecked == true)
             {
-                if (checkBox.IsChecked == false)
-                {
-                    System.Diagnostics.Process.Start(vu_path, "-high120");
-                }
-                // Launch VU Server at 120Hz
-                else if (checkBox.IsChecked == true)
-                {
-                    System.Diagnostics.Process.Start(vu_path, "-server -dedicated -high120");
-                }
+                launchVenice("120", vu_path);
             }
         }
     }
