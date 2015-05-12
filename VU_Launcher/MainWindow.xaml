@@ -1,4 +1,4 @@
-﻿<Window x:Class="WpfApplication1.MainWindow"
+﻿<Window x:Class="VU_Launcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,9 +12,9 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <RadioButton x:Name="radioButton" Content="30Hz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="Retail BF3" IsChecked="True"/>
-        <RadioButton x:Name="radioButton1" Content="60Hz" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="VU High Frequency"/>
-        <RadioButton x:Name="radioButton2" Content="120Hz" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Height="15" Width="52" ToolTip="VU High Frequency"/>
+        <RadioButton x:Name="radioButton30Hz" Content="30Hz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="Retail BF3" IsChecked="True"/>
+        <RadioButton x:Name="radioButton60Hz" Content="60Hz" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="VU High Frequency"/>
+        <RadioButton x:Name="radioButton120Hz" Content="120Hz" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Height="15" Width="52" ToolTip="VU High Frequency"/>
         <Button x:Name="button" Content="Launch" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="button_Click"/>
         <CheckBox x:Name="checkBox" Content="Server" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" ToolTip="VU Server" IsEnabled="False"/>
 
