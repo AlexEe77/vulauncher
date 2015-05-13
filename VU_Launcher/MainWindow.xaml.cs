@@ -48,7 +48,7 @@ namespace VU_Launcher
                 vuPath = (regPath + "\\vu.exe");
 
                 // Check if VU is even installed, if not, throw exception
-                if (!File.Exists(vuPath)) throw new Exception("Cound not find vu.exe!\n" + 
+                if (!File.Exists(vuPath)) throw new Exception("Could not find vu.exe!\n" + 
                                                               "Please verify Venice Unleashed is installed correctly.");
             }
             catch (Exception exception)
@@ -64,7 +64,7 @@ namespace VU_Launcher
             {
                 LaunchVenice("30", vuPath);
             }
-            // In case of 60Hz...
+            // In case of 60Hz... 
             else if (radioButton60Hz.IsChecked == true)
             {
                 LaunchVenice("60", vuPath);
@@ -74,6 +74,10 @@ namespace VU_Launcher
             {
                 LaunchVenice("120", vuPath);
             }
+
+            // close app if checked
+            if (closeAfterLaunch.IsChecked == true)
+                Application.Current.Shutdown();
         }
     }
 }
