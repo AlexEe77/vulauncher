@@ -29,9 +29,15 @@ namespace WpfApplication1
         // Launch Venice with the selected freq.
         private void launchVenice(String frequency, String vu_path)
         {
-            System.Diagnostics.Process.Start(vu_path, "-high" + frequency);
-            if (closeAfterLaunch.IsChecked == true)
-                Application.Current.Shutdown();
+            if (checkBox.IsChecked == false)
+            {
+                System.Diagnostics.Process.Start(vu_path, "-high" + frequency);
+            }
+            // Launch VU Server
+            else if (checkBox.IsChecked == true)
+            {
+                System.Diagnostics.Process.Start(vu_path, "-server -dedicated -high" + frequency);
+            }
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
