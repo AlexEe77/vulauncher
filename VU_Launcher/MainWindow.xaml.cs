@@ -1,20 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace WpfApplication1
+namespace VU_Launcher
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,48 +16,63 @@ namespace WpfApplication1
         }
 
         // Launch Venice with the selected freq.
-        private void launchVenice(String frequency, String vu_path)
+        private void LaunchVenice(String frequency, String vuPath)
         {
-            if (checkBox.IsChecked == false)
+            switch (checkBox.IsChecked)
             {
-                System.Diagnostics.Process.Start(vu_path, "-high" + frequency);
-            }
-            // Launch VU Server
-            else if (checkBox.IsChecked == true)
-            {
-                System.Diagnostics.Process.Start(vu_path, "-server -dedicated -high" + frequency);
+                case false:
+                    System.Diagnostics.Process.Start(vuPath, "-high" + frequency);
+                    break;
+                case true:
+                    System.Diagnostics.Process.Start(vuPath, "-server -dedicated -high" + frequency);
+                    break;
             }
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            // Getting VU/BF3 install path 
-            String reg_path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\EA Games\Battlefield 3", "Install Dir", null);
+            // Getting VU/BF3 install path
+            string vuPath;
 
-            // In case VU/BF3 is installed on 32bit system
-            if (reg_path == null)
+            // Error prevention
+            try
             {
-                reg_path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\EA Games\Battlefield 3", "Install Dir", null);
-            }
+                var regPath = (string) Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\EA Games\Battlefield 3", "Install Dir", null) ?? 
+                                 // In case VU/BF3 is installed on 32bit system
+                                 (string) Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\EA Games\Battlefield 3", "Install Dir", null);
 
-            // VU/BF3 install path
-            String vu_path = (reg_path + "\\vu.exe");
+                // If the key was not found, so regPath equals null, trow exception
+                if (regPath == null) throw new Exception("Could not get installation directory!\n"+
+                                                         "Please verify Battlefield 3 is installed correctly.");
+                // VU/BF3 install path
+                vuPath = (regPath + "\\vu.exe");
+
+                // Check if VU is even installed, if not, throw exception
+                if (!File.Exists(vuPath)) throw new Exception("Cound not find vu.exe!\n" + 
+                                                              "Please verify Venice Unleashed is installed correctly.");
+            }
+            catch (Exception exception)
+            {
+                // Show our error message and return
+                MessageBox.Show(exception.Message, "An Error Occurred!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             // Which option has been selected, launch VU in 30Hz, 60Hz or 120Hz
             // In case of 30Hz...
-            if (radioButton.IsChecked == true)
+            if (radioButton30Hz.IsChecked == true)
             {
-                launchVenice("30", vu_path);
+                LaunchVenice("30", vuPath);
             }
             // In case of 60Hz...
-            else if (radioButton1.IsChecked == true)
+            else if (radioButton60Hz.IsChecked == true)
             {
-                launchVenice("60", vu_path);
+                LaunchVenice("60", vuPath);
             }
             // In case of 120Hz...
-            else if (radioButton2.IsChecked == true)
+            else if (radioButton120Hz.IsChecked == true)
             {
-                launchVenice("120", vu_path);
+                LaunchVenice("120", vuPath);
             }
         }
     }
