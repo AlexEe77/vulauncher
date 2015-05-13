@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VU_Launcher"
         mc:Ignorable="d"
-        Title="VU Launcher" Height="160" Width="160" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="VU Launcher" Height="180" Width="160" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="1">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -15,8 +15,9 @@
         <RadioButton x:Name="radioButton30Hz" Content="30Hz" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="Retail BF3" IsChecked="True"/>
         <RadioButton x:Name="radioButton60Hz" Content="60Hz" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="VU High Frequency"/>
         <RadioButton x:Name="radioButton120Hz" Content="120Hz" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Height="15" Width="52" ToolTip="VU High Frequency"/>
-        <Button x:Name="button" Content="Launch" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="button_Click"/>
+        <Button x:Name="button" Content="Launch" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="button_Click" RenderTransformOrigin="0.547,-0.2"/>
         <CheckBox x:Name="checkBox" Content="Server" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" ToolTip="VU Server" IsEnabled="False"/>
+        <CheckBox x:Name="closeAfterLaunch" Content="Exit after launch" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" ToolTip="" IsEnabled="True" IsChecked="true"/>
 
     </Grid>
 </Window>
