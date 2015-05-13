@@ -16,7 +16,7 @@
         <RadioButton x:Name="radioButton1" Content="60Hz" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="VU High Frequency"/>
         <RadioButton x:Name="radioButton2" Content="120Hz" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Height="15" Width="52" ToolTip="VU High Frequency"/>
         <Button x:Name="button" Content="Launch" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="button_Click"/>
-        <CheckBox x:Name="closeAfterLaunch" Content="Exit after launch?" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" ToolTip="" IsEnabled="true" IsChecked="True"/>
+        <CheckBox x:Name="checkBox" Content="Server" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" ToolTip="VU Server" IsEnabled="False"/>
 
     </Grid>
 </Window>
