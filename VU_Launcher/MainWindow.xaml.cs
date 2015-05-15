@@ -37,11 +37,6 @@ namespace VU_Launcher
 
         public MainWindow()
         {
-            if (!File.Exists("Hardcodet.Wpf.TaskbarNotification.dll"))
-                MessageBox.Show("\"Hardcodet.Wpf.TaskbarNotification.dll\" is missing!\n" +
-                                "Be sure it's in the same folder of VU Launcher.", "VU Launcher - Missing .dll!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-
-
             // Getting the installation path of VU
             _vuPath = GetInstallPath();
 
