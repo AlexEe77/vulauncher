@@ -32,33 +32,52 @@ namespace VU_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string _vuFreqency;
+        private readonly string _vuPath;
+
         public MainWindow()
         {
             if (!File.Exists("Hardcodet.Wpf.TaskbarNotification.dll"))
                 MessageBox.Show("\"Hardcodet.Wpf.TaskbarNotification.dll\" is missing!\n" +
                                 "Be sure it's in the same folder of VU Launcher.", "VU Launcher - Missing .dll!", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
 
+
+            // Getting the installation path of VU
+            _vuPath = GetInstallPath();
+
+            // Shutdown if we cannot get the installation path
+            if (_vuPath == null)
+                Application.Current.Shutdown();
+
             InitializeComponent();
 
             // Loading user preferences
             checkBox_autoClose.IsChecked = Properties.Settings.Default.appAutoClose;
             minToTray.IsChecked = Properties.Settings.Default.appMinToTray;
-            if (Properties.Settings.Default.vuFrequency == 0)
-                radioButton_30hz.IsChecked = true;
-            else if (Properties.Settings.Default.vuFrequency == 1)
-                radioButton_60hz.IsChecked = true;
-            else if (Properties.Settings.Default.vuFrequency == 2)
-                radioButton_120hz.IsChecked = true;
+            switch (Properties.Settings.Default.vuFrequency)
+            {
+                case 0:
+                    radioButton_30hz.IsChecked = true;
+                    break;
+                case 1:
+                    radioButton_60hz.IsChecked = true;
+                    break;
+                case 2:
+                    radioButton_120hz.IsChecked = true;
+                    break;
+            }
             checkBox_noBorder.IsChecked = Properties.Settings.Default.vuNoBorder;
             checkBox_server.IsChecked = Properties.Settings.Default.vuServer;
         }
 
-        private string getInstallPath(string vuPath)
+        private static string GetInstallPath()
         {
             try
             {
                 // 64bit or 32bit OS BF3 installation path
-                var regPath = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\EA Games\Battlefield 3", "Install Dir", null) ?? (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\EA Games\Battlefield 3", "Install Dir", null);
+                var regPath =
+                    (string)
+                        Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\EA Games\Battlefield 3", "Install Dir", null) ?? (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\EA Games\Battlefield 3", "Install Dir", null);
 
                 // In case of missing registry key, show error as BF3 is possibly not installed
                 if (regPath == null)
@@ -66,7 +85,7 @@ namespace VU_Launcher
                                         "Please verify Battlefield 3 is installed correctly.");
 
                 // VU installation path
-                vuPath = (regPath + "\\vu.exe");
+                var vuPath = (regPath + "\\vu.exe");
 
                 // Check if VU is properly installed, if not show error
                 if (!File.Exists(vuPath))
@@ -78,13 +97,13 @@ namespace VU_Launcher
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                throw;
             }
+            return null;
         }
 
-        private void launchVenice(string freq, string vuPath)
+        private void LaunchVenice(string freq, string vuPath)
         {
-            string[] spLevel = new string[]{"SP_New_York", "SP_Earthquake", "SP_Earthquake2", "SP_Jet", "SP_Bank", "SP_Paris", "SP_Tank", "SP_Tank_b", "SP_Sniper", "SP_Valley", "SP_Villa", "SP_Finale"};
+            var spLevel = new []{"SP_New_York", "SP_Earthquake", "SP_Earthquake2", "SP_Jet", "SP_Bank", "SP_Paris", "SP_Tank", "SP_Tank_b", "SP_Sniper", "SP_Valley", "SP_Villa", "SP_Finale"};
 
             switch (checkBox_server.IsChecked)
             {
@@ -93,137 +112,36 @@ namespace VU_Launcher
                     // Launch VU on the selected campaign level
                     if (comboBox_spLevel.SelectedItem != null)
                     {
-                        switch (comboBox_spLevel.SelectedIndex)
-                        {
-                            // Semper Fidelis
-                            case 0:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[0]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[0]);
-                                break;
-                            // Operation Swordbreaker
-                            case 1:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[1]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[1]);
-                                break;
-                            // Uprising
-                            case 2:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[2]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[2]);
-                                break;
-                            // Going Hunting
-                            case 3:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[3]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[3]);
-                                break;
-                            // Operation Guillotine
-                            case 4:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[4]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[4]);
-                                break;
-                            // Comrades
-                            case 5:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[5]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[5]);
-                                break;
-                            // Thunder Run
-                            case 6:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[6]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[6]);
-                                break;
-                            // Fear No Evil
-                            case 7:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[7]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[7]);
-                                break;
-                            // Night Shift
-                            case 8:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[8]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[8]);
-                                break;
-                            // Rock and a Hard Place
-                            case 9:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[9]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[9]);
-                                break;
-                            // Kaffarov
-                            case 10:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[10]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[10]);
-                                break;
-                            // The Great Destroyer
-                            case 11:
-                                System.Diagnostics.Process.Start(vuPath, "-high" + freq + " -level " + spLevel[11]);
-                                if (checkBox_noBorder.IsChecked == true)
-                                    System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[11]);
-                                break;
-                        }
+                        System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq + " -level " + spLevel[comboBox_spLevel.SelectedIndex]);
                     }
                     // If no level is selected, launch VU normally
                     else if (comboBox_spLevel.SelectedItem == null)
                     {
-                        System.Diagnostics.Process.Start(vuPath, "-high" + freq);
+                        // If option checked, lauch without border
                         if (checkBox_noBorder.IsChecked == true)
                             System.Diagnostics.Process.Start(vuPath, "-noBorder -high" + freq);
+                        // Otherwise, launch VU normally
+                        else
+                        {
+                            System.Diagnostics.Process.Start(vuPath, "-high" + freq);  
+                        }
                     }
-                // Auto close the app if desired
-                if (checkBox_autoClose.IsChecked == true)
-                    Application.Current.Shutdown();
-                break;
+                    break;
 
                 // Launch VU Server
                 case true:
-                    // Launch VU with no borders if desired
-                    switch (checkBox_noBorder.IsChecked)
-                    {
-                        case false:
-                            System.Diagnostics.Process.Start(vuPath, "-server -dedicated -high" + freq);
-                            break;
-
-                        case true:
-                            System.Diagnostics.Process.Start(vuPath, "-noBorder -server -dedicated -high" + freq);
-                            break;
-                    }
-                // Auto close the app if desired
-                if (checkBox_autoClose.IsChecked == true)
-                    Application.Current.Shutdown();
-                break;
+                    System.Diagnostics.Process.Start(vuPath, "-server -dedicated -high" + freq);
+                    break;
             }
+
+            // Auto close the app if desired
+            if (checkBox_autoClose.IsChecked == true)
+                Application.Current.Shutdown();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void btnLaunch_Click(object sender, RoutedEventArgs e)
         {
-            string vuPath = "";
-
-            try
-            {
-                vuPath = getInstallPath(vuPath);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            // Launch VU with whatever option has been selected
-            // In case of 30Hz
-            if (radioButton_30hz.IsChecked == true)
-                launchVenice("30", vuPath); // This will add -high30 parameter which is unnecessary, but the end result it's the same anyway 
-            // In case of 60Hz
-            else if (radioButton_60hz.IsChecked == true)
-                launchVenice("60", vuPath);
-            // In case of 120Hz
-            else if (radioButton_120hz.IsChecked == true)
-                launchVenice("120", vuPath);
+            LaunchVenice(_vuFreqency, _vuPath);
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -313,56 +231,42 @@ namespace VU_Launcher
 
         private void launchVU30Hz_Click(object sender, RoutedEventArgs e)
         {
-            string vuPath = "";
-
-            try
-            {
-                vuPath = getInstallPath(vuPath);
-            }
-            catch (Exception)
-            {
-                return;
-            }
             // Quick launch VU at 30Hz
-            System.Diagnostics.Process.Start(vuPath);
+            System.Diagnostics.Process.Start(_vuPath, "-high30");
         }
 
         private void launchVU60Hz_Click(object sender, RoutedEventArgs e)
         {
-            string vuPath = "";
-
-            try
-            {
-                vuPath = getInstallPath(vuPath);
-            }
-            catch (Exception)
-            {
-                return;
-            }
             // Quick launch VU at 60Hz
-            System.Diagnostics.Process.Start(vuPath, "-high60");
+            System.Diagnostics.Process.Start(_vuPath, "-high60");
         }
 
         private void launchVU120Hz_Click(object sender, RoutedEventArgs e)
         {
-            string vuPath = "";
-
-            try
-            {
-                vuPath = getInstallPath(vuPath);
-            }
-            catch (Exception)
-            {
-                return;
-            }
             // Quick launch VU at 120Hz
-            System.Diagnostics.Process.Start(vuPath, "-high120");
+            System.Diagnostics.Process.Start(_vuPath, "-high120");
         }
 
         private void exit_Click(object sender, RoutedEventArgs e)
         {
             // Close VU Launcher from system tray icon
             Application.Current.Shutdown();
+        }
+
+        // Set _vuFreqency on Checked event to simplify getting selected frequency
+        private void radioButton_30hz_Checked(object sender, RoutedEventArgs e)
+        {
+            _vuFreqency = "30";
+        }
+
+        private void radioButton_60hz_Checked(object sender, RoutedEventArgs e)
+        {
+            _vuFreqency = "60";
+        }
+
+        private void radioButton_120hz_Checked(object sender, RoutedEventArgs e)
+        {
+            _vuFreqency = "120";
         }
     }
 }
