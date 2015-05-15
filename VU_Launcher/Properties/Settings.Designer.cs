@@ -22,5 +22,89 @@ namespace VU_Launcher.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool appAutoClose {
+            get {
+                return ((bool)(this["appAutoClose"]));
+            }
+            set {
+                this["appAutoClose"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool appMinToTray {
+            get {
+                return ((bool)(this["appMinToTray"]));
+            }
+            set {
+                this["appMinToTray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int vuFrequency {
+            get {
+                return ((int)(this["vuFrequency"]));
+            }
+            set {
+                this["vuFrequency"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool vuNoBorder {
+            get {
+                return ((bool)(this["vuNoBorder"]));
+            }
+            set {
+                this["vuNoBorder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool vuServer {
+            get {
+                return ((bool)(this["vuServer"]));
+            }
+            set {
+                this["vuServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string vuSpLevel {
+            get {
+                return ((string)(this["vuSpLevel"]));
+            }
+            set {
+                this["vuSpLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool appTrayNotify {
+            get {
+                return ((bool)(this["appTrayNotify"]));
+            }
+            set {
+                this["appTrayNotify"] = value;
+            }
+        }
     }
 }
