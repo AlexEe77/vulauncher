@@ -28,4 +28,6 @@ No installation is required. Just extract all the files in the same folder and r
 
 For major info, please visit the GitHub page: https://github.com/Dendari92/vulauncher
 
+Thanks to Philipp Sumi for the WPF NotifyIcon control: http://www.hardcodet.net/wpf-notifyicon
+
 Special thanks to the Emulator Nexus staff for the incredible effort put into Venice Unleashed.
