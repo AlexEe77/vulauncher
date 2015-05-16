@@ -8,8 +8,6 @@ Choose to run the client at 30Hz, 60Hz or even 120Hz. Playing in windowed mode a
 
 No installation is required. Just extract all the files in the same folder and run *VU_Launcher.exe*.
 
-**NOTE:** *VU_Launcher.exe* and *Hardcodet.Wpf.TaskbarNotification.dll* must be in the same folder for the app to work.
-
 ## Changelog
 
 ### v1.1
