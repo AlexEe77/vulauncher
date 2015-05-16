@@ -12,6 +12,10 @@ No installation is required. Just extract all the files in the same folder and r
 
 ## Changelog
 
+### v1.1
+* Fixed a bug when launching VU with no borders. (Thanks Johlandabee)
+* The .dll file and .exe one have been incorporated. (Thanks Johlandabee)
+
 ### v1.0
 * Icon added.
 * Automatically close the application based on user choice.
