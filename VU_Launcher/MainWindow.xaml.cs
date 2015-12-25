@@ -86,11 +86,18 @@ namespace VU_Launcher
                                         "Please verify Battlefield 3 is installed correctly.");
 
                 // VU installation path
-                var vuPath = (regPath + "\\vu.exe");
+                var vuPath =
+                    // New VU path since December 2015
+                    (string)
+                        Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\VeniceUnleashed_is1",
+                            "InstallLocation", null) + "vu.exe" ??
+                    
+                    // Old path, just in case
+                    (regPath + "\\vu.exe");
 
                 // Check if VU is properly installed, if not show error
                 if (!File.Exists(vuPath))
-                    throw new Exception("Cound not find \"vu.exe\" in the Battlefield 3 directory!\n" +
+                    throw new Exception("Could not retrieve the installation directory!\n" +
                                         "Please verify Venice Unleashed is installed correctly.");
 
                 return vuPath;
