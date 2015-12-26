@@ -8,7 +8,7 @@
         xmlns:Properties="clr-namespace:VU_Launcher.Properties" x:Class="VU_Launcher.MainWindow"
         StateChanged="Window_StateChanged"
         Closing="Window_Closing"
-        Title="VU Launcher" Height="181.894" Width="220" WindowStartupLocation="CenterScreen" Icon="Logo.ico" ResizeMode="CanMinimize">
+        Title="VU Launcher" Height="180" Width="220" WindowStartupLocation="CenterScreen" Icon="Logo.ico" ResizeMode="CanMinimize">
     <Grid Height="145" VerticalAlignment="Top">
         <Grid.Resources>
             <local:ShowAppCommand
@@ -18,21 +18,21 @@
         <RadioButton x:Name="radioButton_60hz" Content="60Hz" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Height="15" Width="46" ToolTip="VU High Frequency" Grid.ColumnSpan="2" Checked="radioButton_60hz_Checked"/>
         <RadioButton x:Name="radioButton_120hz" Content="120Hz" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Height="15" Width="52" ToolTip="VU High Frequency" Grid.ColumnSpan="2" Checked="radioButton_120hz_Checked"/>
         <Button x:Name="btnLaunch" Content="Launch" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="btnLaunch_Click" Grid.ColumnSpan="2" ToolTip="Start VU with the selected options"/>
-        <CheckBox x:Name="checkBox_server" Content="Server" HorizontalAlignment="Left" Margin="93,70,0,0" VerticalAlignment="Top" ToolTip="VU Server" IsEnabled="False"/>
+        <CheckBox x:Name="checkBox_server" Content="Server" HorizontalAlignment="Left" Margin="93,70,0,0" VerticalAlignment="Top" ToolTip="VU Server"/>
         <CheckBox x:Name="checkBox_autoClose" Content="Auto Close" HorizontalAlignment="Left" Margin="93,93,0,0" VerticalAlignment="Top" ToolTip="Close VU Launcher automatically after VU is launched" IsChecked="True"/>
         <ComboBox x:Name="comboBox_spLevel" HorizontalAlignment="Left" Margin="93,35,0,0" VerticalAlignment="Top" Width="88" IsEditable="True" ToolTip="Select a campaign mission">
-            <ListBoxItem Content="Semper Fidelis"/>
-            <ListBoxItem Content="Operation Swordbreaker"/>
-            <ListBoxItem Content="Uprising"/>
-            <ListBoxItem Content="Going Hunting"/>
-            <ListBoxItem Content="Operation Guillotine"/>
-            <ListBoxItem Content="Comrades"/>
-            <ListBoxItem Content="Thunder Run"/>
-            <ListBoxItem Content="Fear No Evil"/>
-            <ListBoxItem Content="Night Shift"/>
-            <ListBoxItem Content="Rock and a Hard Place"/>
-            <ListBoxItem Content="Kaffarov"/>
-            <ListBoxItem Content="The Great Destroyer"/>
+            <ListBoxItem Content="1. Semper Fidelis"/>
+            <ListBoxItem Content="2. Operation Swordbreaker"/>
+            <ListBoxItem Content="3. Uprising"/>
+            <ListBoxItem Content="4. Going Hunting"/>
+            <ListBoxItem Content="5. Operation Guillotine"/>
+            <ListBoxItem Content="6. Comrades"/>
+            <ListBoxItem Content="7. Thunder Run"/>
+            <ListBoxItem Content="8. Fear No Evil"/>
+            <ListBoxItem Content="9. Night Shift"/>
+            <ListBoxItem Content="10. Rock and a Hard Place"/>
+            <ListBoxItem Content="11. Kaffarov"/>
+            <ListBoxItem Content="12. The Great Destroyer"/>
         </ComboBox>
         <Label x:Name="label" Content="Select SP Level" HorizontalAlignment="Left" Margin="93,4,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="checkBox_noBorder" Content="No Border" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" ToolTip="Windowed mode with no border"/>
@@ -45,9 +45,9 @@
                 <ContextMenu>
                     <MenuItem Header="Open VU Launcher" Click="openVULauncher_Click"/>
                     <Separator/>
-                    <MenuItem Header="Quick launch at 30Hz" Click="launchVU30Hz_Click"/>
-                    <MenuItem Header="Quick launch at 60Hz" Click="launchVU60Hz_Click"/>
-                    <MenuItem Header="Quick launch at 120Hz" Click="launchVU120Hz_Click"/>
+                    <MenuItem Name="qckLaunch30Hz" Header="Quick launch at 30Hz" Click="launchVU30Hz_Click"/>
+                    <MenuItem Name="qckLaunch60Hz" Header="Quick launch at 60Hz" Click="launchVU60Hz_Click"/>
+                    <MenuItem Name="qckLaunch120Hz" Header="Quick launch at 120Hz" Click="launchVU120Hz_Click"/>
                     <Separator/>
                     <MenuItem Header="Minimize to system tray" x:Name="minToTray" IsCheckable="True" IsChecked="True"/>
                     <Separator/>
@@ -55,7 +55,7 @@
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
-        <Button x:Name="btn_installVU" Content="Install VU" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
-        <ProgressBar x:Name="progressbar_download" HorizontalAlignment="Left" Height="12" Margin="93,119,0,0" VerticalAlignment="Top" Width="88"/>
+        <Button x:Name="btnInstallVU" Content="Install VU" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Width="75" Click="btnInstallVU_Click" ToolTip="Install latest VU version"/>
+        <ProgressBar x:Name="progressBarDownload" HorizontalAlignment="Left" Height="12" Margin="93,119,0,0" VerticalAlignment="Top" Width="88"/>
     </Grid>
 </Window>

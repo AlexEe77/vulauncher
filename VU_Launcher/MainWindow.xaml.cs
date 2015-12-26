@@ -36,21 +36,33 @@ namespace VU_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string _vuPath;
+        private readonly string _vuPath = Settings.Default.vuPath;
         private string _vuFreqency;
 
         public MainWindow()
         {
             // Getting the installation path of VU
-            _vuPath = GetInstallPath();
+            if (Settings.Default.vuPath == "")
+                _vuPath = GetInstallPath();
 
             // Shutdown if we cannot get the installation path
             if (_vuPath == null)
                 Application.Current.Shutdown();
 
-            _vuPath += "\\vu.exe";
+            _vuPath += "vu.exe";
 
             InitializeComponent();
+
+            // Enable/disable buttons based on whether VU is installed or not
+            if (File.Exists(_vuPath))
+                btnInstallVU.IsEnabled = false;
+            else
+            {
+                btnLaunch.IsEnabled = false;
+                qckLaunch30Hz.IsEnabled = false;
+                qckLaunch60Hz.IsEnabled = false;
+                qckLaunch120Hz.IsEnabled = false;
+            }                
 
             // Loading user preferences
             checkBox_autoClose.IsChecked = Settings.Default.appAutoClose;
@@ -76,7 +88,7 @@ namespace VU_Launcher
             try
             {
                 // 64bit or 32bit OS BF3 installation path
-                var regPath =
+                var bf3Path =
                     (string)
                         Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\EA Games\Battlefield 3",
                             "Install Dir", null) ??
@@ -84,25 +96,67 @@ namespace VU_Launcher
                         Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\EA Games\Battlefield 3", "Install Dir", null);
 
                 // In case of missing registry key, show error as BF3 is possibly not installed
-                if (regPath == null)
+                if (bf3Path == null)
                     throw new Exception("Could not retrieve the installation directory!\n" +
                                         "Please verify Battlefield 3 is installed correctly.");
-                return regPath;
+
+                string vuPath;
+
+                // Detecting new/old VU installation path
+                if (File.Exists(bf3Path + "vu.exe"))
+                    vuPath = bf3Path;
+                else
+                {
+                    vuPath = 
+                        (string) 
+                            Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\VeniceUnleashed_is1",
+                                "InstallLocation", null);
+                    if (vuPath == null)
+                    {
+                        // Let user select the VU installation path
+                        OpenFileDialog selectVUInstallPath = new OpenFileDialog();
+
+                        selectVUInstallPath.InitialDirectory = "C:\\";
+                        selectVUInstallPath.Filter = "VU Executable|vu.exe";
+                        selectVUInstallPath.FileName = "Please select the folder where you've installed Venice Unleashed. Press \"Cancel\" if you want to use the Battlefield 3 folder.";
+
+                        if (selectVUInstallPath.ShowDialog() == true)
+                            vuPath = selectVUInstallPath.FileName.TrimEnd(new char[] { 'v', 'u', '.', 'e', 'x', 'e' });
+                        else
+                            vuPath = bf3Path; // Always default to BF3 install folder
+                    }
+                }
+
+                // Save VU installation path
+                Settings.Default.vuPath = vuPath;
+                return vuPath;
             }
+
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
             return null;
         }
 
         private void LaunchVenice(string freq, string vuPath)
         {
+            // Single player levels names
             var spLevel = new[]
             {
-                "SP_New_York", "SP_Earthquake", "SP_Earthquake2", "SP_Jet", "SP_Bank", "SP_Paris", "SP_Tank",
-                "SP_Tank_b",
-                "SP_Sniper", "SP_Valley", "SP_Villa", "SP_Finale"
+                "SP_New_York",      // 1. Semper Fidelis
+                "SP_Earthquake",    // 2. Operation Swordbreaker
+                "SP_Earthquake2",   // 3. Uprising
+                "SP_Jet",           // 4. Going Hunting
+                "SP_Bank",          // 5. Operation Guillotine
+                "SP_Paris",         // 6. Comrades
+                "SP_Tank",          // 7. Thunder Run
+                "SP_Tank_b",        // 8. Fear No Evil
+                "SP_Sniper",        // 9. Night Shift
+                "SP_Valley",        // 10. Rock and a Hard Place
+                "SP_Villa",         // 11. Kaffarov
+                "SP_Finale"         // 12. The Great Destroyer
             };
 
             switch (checkBox_server.IsChecked)
@@ -146,16 +200,17 @@ namespace VU_Launcher
         private void btnLaunch_Click(object sender, RoutedEventArgs e)
         {
             // VU installation path
-            string vuFilePath = GetInstallPath() + "\\vu.exe";
+            string vuFilePath = Settings.Default.vuPath;
 
-            if (!File.Exists(vuFilePath))
+            // Check if "vu.exe" exists, if not show error message and disable launch button
+            if (!File.Exists(vuFilePath + "vu.exe"))
             {
-                MessageBox.Show("Install VU first!");
+                MessageBox.Show("Could not retrieve the installation directory!\n" +
+                                        "Please verify Venice Unleashed is installed correctly.", "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 btnLaunch.IsEnabled = false;
-                btn_installVU.IsEnabled = true;
+                btnInstallVU.IsEnabled = true;
             }
             else LaunchVenice(_vuFreqency, _vuPath);
-
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -166,6 +221,8 @@ namespace VU_Launcher
                 case WindowState.Minimized:
                     if (minToTray.IsChecked == true)
                         ShowInTaskbar = false;
+
+                    // One time notification when minimizing to system tray
                     if (Settings.Default.appTrayNotify == true)
                         sysTrayIcon.ShowBalloonTip("VU Launcher",
                             "Venice Unleashed Launcher is now minimized to the system tray. From here you can quickly launch VU.",
@@ -174,6 +231,7 @@ namespace VU_Launcher
                     break;
             }
         }
+
         private void launchVU30Hz_Click(object sender, RoutedEventArgs e)
         {
             // Quick launch VU at 30Hz
@@ -191,6 +249,7 @@ namespace VU_Launcher
             // Quick launch VU at 120Hz
             Process.Start(_vuPath, "-high120");
         }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             // Saving user preferences
@@ -282,18 +341,18 @@ namespace VU_Launcher
         {
             _vuFreqency = "120";
         }
-        private void Download_VU(object sender, EventArgs e)
-        {
 
-        }
-
+        // Manually install/update latest VU version
         void update_VU(object sender, RoutedEventArgs e)
         {
             btnLaunch.IsEnabled = false;
-            btn_installVU.IsEnabled = false;
-            WebClient client = new WebClient();
-            string vuPath = GetInstallPath();
+            btnInstallVU.IsEnabled = false;
+            
+            string vuPath = Settings.Default.vuPath;
             string name_downloadedFile = "VU_latest.zip";
+
+            WebClient client = new WebClient();
+
             try
             {
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
@@ -305,29 +364,37 @@ namespace VU_Launcher
                 MessageBox.Show(exception.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // Sync progress bar with download percentage
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            progressbar_download.Maximum = (int)e.TotalBytesToReceive / 100;
-            progressbar_download.Value = (int)e.BytesReceived / 100;
+            progressBarDownload.Maximum = (int)e.TotalBytesToReceive / 100;
+            progressBarDownload.Value = (int)e.BytesReceived / 100;
+            progressBarDownload.ToolTip = (int)e.BytesReceived / 1000000 + "MB / " + (int)e.TotalBytesToReceive / 1000000 + "MB";
         }
 
+        // Extract downloaded VU zip file
         void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            string vuPath = GetInstallPath();
-            string name_downloadedFile = "VU_latest.zip";
+            string vuPath = Settings.Default.vuPath;
+            string nameDownloadedFile = "VU_latest.zip";
             try {
-                System.IO.Compression.ZipFile.ExtractToDirectory((vuPath + name_downloadedFile), vuPath);
-                File.Delete(vuPath + name_downloadedFile);
+                System.IO.Compression.ZipFile.ExtractToDirectory((vuPath + nameDownloadedFile), vuPath);
+                File.Delete(vuPath + nameDownloadedFile);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            MessageBox.Show("Update completed and successfully installed!");
+            MessageBox.Show("Venice Unleashed has been successfully installed!", "VU Launcher - Info!", MessageBoxButton.OK, MessageBoxImage.Information);
             btnLaunch.IsEnabled = true;
-            progressbar_download.Value = 0;
+            qckLaunch30Hz.IsEnabled = true;
+            qckLaunch60Hz.IsEnabled = true;
+            qckLaunch120Hz.IsEnabled = true;
+            progressBarDownload.Value = 0;
         }
-        private void button_Click(object sender, RoutedEventArgs e)
+
+        private void btnInstallVU_Click(object sender, RoutedEventArgs e)
         {
             update_VU(sender, e);
         }
