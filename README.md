@@ -10,6 +10,13 @@ No installation is required. Just extract all the files in the same folder and r
 
 ## Changelog
 
+### v1.2
+* Reworked VU detection system, now it should work with old, new and custom installations.
+* Added a way to install VU directly from VU Launcher. (Thanks AlexEe77)
+* Enabled the server launch option.
+* Added "-restore" command line option to reset the user configuration.
+* Other minor fixes/changes.
+
 ### v1.1.1
 * Fix for new VU installation method (December 2015).
 
