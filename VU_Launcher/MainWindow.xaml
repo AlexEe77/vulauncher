@@ -8,8 +8,8 @@
         xmlns:Properties="clr-namespace:VU_Launcher.Properties" x:Class="VU_Launcher.MainWindow"
         StateChanged="Window_StateChanged"
         Closing="Window_Closing"
-        Title="VU Launcher" Height="160" Width="220" WindowStartupLocation="CenterScreen" Icon="Logo.ico" ResizeMode="CanMinimize">
-    <Grid>
+        Title="VU Launcher" Height="181.894" Width="220" WindowStartupLocation="CenterScreen" Icon="Logo.ico" ResizeMode="CanMinimize">
+    <Grid Height="145" VerticalAlignment="Top">
         <Grid.Resources>
             <local:ShowAppCommand
                 x:Key="ShowApp"/>
@@ -20,7 +20,7 @@
         <Button x:Name="btnLaunch" Content="Launch" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="btnLaunch_Click" Grid.ColumnSpan="2" ToolTip="Start VU with the selected options"/>
         <CheckBox x:Name="checkBox_server" Content="Server" HorizontalAlignment="Left" Margin="93,70,0,0" VerticalAlignment="Top" ToolTip="VU Server" IsEnabled="False"/>
         <CheckBox x:Name="checkBox_autoClose" Content="Auto Close" HorizontalAlignment="Left" Margin="93,93,0,0" VerticalAlignment="Top" ToolTip="Close VU Launcher automatically after VU is launched" IsChecked="True"/>
-        <ComboBox x:Name="comboBox_spLevel" HorizontalAlignment="Left" Margin="93,41,0,0" VerticalAlignment="Top" Width="88" IsEditable="True" Grid.ColumnSpan="3" ToolTip="Select a campaign mission">
+        <ComboBox x:Name="comboBox_spLevel" HorizontalAlignment="Left" Margin="93,35,0,0" VerticalAlignment="Top" Width="88" IsEditable="True" ToolTip="Select a campaign mission">
             <ListBoxItem Content="Semper Fidelis"/>
             <ListBoxItem Content="Operation Swordbreaker"/>
             <ListBoxItem Content="Uprising"/>
@@ -34,7 +34,7 @@
             <ListBoxItem Content="Kaffarov"/>
             <ListBoxItem Content="The Great Destroyer"/>
         </ComboBox>
-        <Label x:Name="label" Content="Select SP Level" HorizontalAlignment="Left" Margin="93,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <Label x:Name="label" Content="Select SP Level" HorizontalAlignment="Left" Margin="93,4,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="checkBox_noBorder" Content="No Border" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" ToolTip="Windowed mode with no border"/>
         <tb:TaskbarIcon
 			x:Name="sysTrayIcon"
@@ -55,5 +55,7 @@
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
+        <Button x:Name="btn_installVU" Content="Install VU" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+        <ProgressBar x:Name="progressbar_download" HorizontalAlignment="Left" Height="12" Margin="93,119,0,0" VerticalAlignment="Top" Width="88"/>
     </Grid>
 </Window>

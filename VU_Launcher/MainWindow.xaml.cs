@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
 using VU_Launcher.Properties;
+using System.Net;
 
 namespace VU_Launcher
 {
@@ -47,6 +48,8 @@ namespace VU_Launcher
             if (_vuPath == null)
                 Application.Current.Shutdown();
 
+            _vuPath += "\\vu.exe";
+
             InitializeComponent();
 
             // Loading user preferences
@@ -84,23 +87,7 @@ namespace VU_Launcher
                 if (regPath == null)
                     throw new Exception("Could not retrieve the installation directory!\n" +
                                         "Please verify Battlefield 3 is installed correctly.");
-
-                // VU installation path
-                var vuPath =
-                    // New VU path since December 2015
-                    (string)
-                        Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\VeniceUnleashed_is1",
-                            "InstallLocation", null) + "vu.exe" ??
-                    
-                    // Old path, just in case
-                    (regPath + "\\vu.exe");
-
-                // Check if VU is properly installed, if not show error
-                if (!File.Exists(vuPath))
-                    throw new Exception("Could not retrieve the installation directory!\n" +
-                                        "Please verify Venice Unleashed is installed correctly.");
-
-                return vuPath;
+                return regPath;
             }
             catch (Exception exception)
             {
@@ -158,7 +145,17 @@ namespace VU_Launcher
 
         private void btnLaunch_Click(object sender, RoutedEventArgs e)
         {
-            LaunchVenice(_vuFreqency, _vuPath);
+            // VU installation path
+            string vuFilePath = GetInstallPath() + "\\vu.exe";
+
+            if (!File.Exists(vuFilePath))
+            {
+                MessageBox.Show("Install VU first!");
+                btnLaunch.IsEnabled = false;
+                btn_installVU.IsEnabled = true;
+            }
+            else LaunchVenice(_vuFreqency, _vuPath);
+
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -177,7 +174,23 @@ namespace VU_Launcher
                     break;
             }
         }
+        private void launchVU30Hz_Click(object sender, RoutedEventArgs e)
+        {
+            // Quick launch VU at 30Hz
+            Process.Start(_vuPath, "-high30");
+        }
 
+        private void launchVU60Hz_Click(object sender, RoutedEventArgs e)
+        {
+            // Quick launch VU at 60Hz
+            Process.Start(_vuPath, "-high60");
+        }
+
+        private void launchVU120Hz_Click(object sender, RoutedEventArgs e)
+        {
+            // Quick launch VU at 120Hz
+            Process.Start(_vuPath, "-high120");
+        }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             // Saving user preferences
@@ -248,24 +261,6 @@ namespace VU_Launcher
             Focus();
         }
 
-        private void launchVU30Hz_Click(object sender, RoutedEventArgs e)
-        {
-            // Quick launch VU at 30Hz
-            Process.Start(_vuPath, "-high30");
-        }
-
-        private void launchVU60Hz_Click(object sender, RoutedEventArgs e)
-        {
-            // Quick launch VU at 60Hz
-            Process.Start(_vuPath, "-high60");
-        }
-
-        private void launchVU120Hz_Click(object sender, RoutedEventArgs e)
-        {
-            // Quick launch VU at 120Hz
-            Process.Start(_vuPath, "-high120");
-        }
-
         private void exit_Click(object sender, RoutedEventArgs e)
         {
             // Close VU Launcher from system tray icon
@@ -286,6 +281,55 @@ namespace VU_Launcher
         private void radioButton_120hz_Checked(object sender, RoutedEventArgs e)
         {
             _vuFreqency = "120";
+        }
+        private void Download_VU(object sender, EventArgs e)
+        {
+
+        }
+
+        void update_VU(object sender, RoutedEventArgs e)
+        {
+            btnLaunch.IsEnabled = false;
+            btn_installVU.IsEnabled = false;
+            WebClient client = new WebClient();
+            string vuPath = GetInstallPath();
+            string name_downloadedFile = "VU_latest.zip";
+            try
+            {
+                client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+                client.DownloadFileAsync(new Uri("http://veniceunleashed.net/VeniceUnleashed.zip"), vuPath + name_downloadedFile);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            progressbar_download.Maximum = (int)e.TotalBytesToReceive / 100;
+            progressbar_download.Value = (int)e.BytesReceived / 100;
+        }
+
+        void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            string vuPath = GetInstallPath();
+            string name_downloadedFile = "VU_latest.zip";
+            try {
+                System.IO.Compression.ZipFile.ExtractToDirectory((vuPath + name_downloadedFile), vuPath);
+                File.Delete(vuPath + name_downloadedFile);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            MessageBox.Show("Update completed and successfully installed!");
+            btnLaunch.IsEnabled = true;
+            progressbar_download.Value = 0;
+        }
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            update_VU(sender, e);
         }
     }
 }
