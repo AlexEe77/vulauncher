@@ -41,12 +41,6 @@ namespace VU_Launcher
 
         public MainWindow()
         {
-            string[] args = Environment.GetCommandLineArgs();
-
-            // Restore "user.config" using "-restore" command line
-            if (args.GetValue(1).ToString() == "-restore")
-                Settings.Default.Reset();
-
             // Getting the installation path of VU
             if (Settings.Default.vuPath == "")
                 _vuPath = GetInstallPath();
