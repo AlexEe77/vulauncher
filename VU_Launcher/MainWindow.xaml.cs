@@ -104,7 +104,7 @@ namespace VU_Launcher
 
                 string vuPath;
 
-                // Detecting new/old VU installation path
+                // Detecting old/new VU installation path
                 if (File.Exists(bf3Path + "vu.exe"))
                     vuPath = bf3Path;
                 else
@@ -233,7 +233,7 @@ namespace VU_Launcher
 
         private void launchVU30Hz_Click(object sender, RoutedEventArgs e)
         {
-            // Quick launch VU at 30Hz
+            // Quick launch VU at 30Hz ("-high30" isn't necessary)
             Process.Start(_vuPath, "-high30");
         }
 
@@ -341,10 +341,10 @@ namespace VU_Launcher
             _vuFreqency = "120";
         }
 
-        // Manually install/update latest VU version
+        // Manually install latest VU version
         void update_VU(object sender, RoutedEventArgs e)
         {
-            // Disable the GUI Buttons
+            // Disable the GUI buttons
             btnLaunch.IsEnabled = false;
             btnInstallVU.IsEnabled = false;
             
@@ -377,19 +377,23 @@ namespace VU_Launcher
         void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string nameDownloadedFile = "VU_latest.zip";
-            try {
+            try
+            {
                 System.IO.Compression.ZipFile.ExtractToDirectory((_vuDir + nameDownloadedFile), _vuDir);
                 File.Delete(_vuDir + nameDownloadedFile);
+
+                MessageBox.Show("Venice Unleashed has been successfully installed!", "VU Launcher - Info!", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Re-enable GUI buttons
+                btnLaunch.IsEnabled = true;
+                qckLaunch30Hz.IsEnabled = true;
+                qckLaunch60Hz.IsEnabled = true;
+                qckLaunch120Hz.IsEnabled = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            MessageBox.Show("Venice Unleashed has been successfully installed!", "VU Launcher - Info!", MessageBoxButton.OK, MessageBoxImage.Information);
-            btnLaunch.IsEnabled = true;
-            qckLaunch30Hz.IsEnabled = true;
-            qckLaunch60Hz.IsEnabled = true;
-            qckLaunch120Hz.IsEnabled = true;
+            }            
             progressBarDownload.Value = 0;
         }
 
