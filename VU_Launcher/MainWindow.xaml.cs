@@ -37,6 +37,7 @@ namespace VU_Launcher
     public partial class MainWindow : Window
     {
         private readonly string _vuPath = Settings.Default.vuPath;
+        private string _vuDir = Settings.Default.vuDir;
         private string _vuFreqency;
 
         public MainWindow()
@@ -49,7 +50,8 @@ namespace VU_Launcher
             if (_vuPath == null)
                 Application.Current.Shutdown();
 
-            _vuPath += "vu.exe";
+            _vuDir = _vuPath;
+            _vuPath = _vuDir + "vu.exe";
 
             InitializeComponent();
 
@@ -199,11 +201,8 @@ namespace VU_Launcher
 
         private void btnLaunch_Click(object sender, RoutedEventArgs e)
         {
-            // VU installation path
-            string vuFilePath = Settings.Default.vuPath;
-
             // Check if "vu.exe" exists, if not show error message and disable launch button
-            if (!File.Exists(vuFilePath + "vu.exe"))
+            if (!File.Exists(_vuPath))
             {
                 MessageBox.Show("Could not retrieve the installation directory!\n" +
                                         "Please verify Venice Unleashed is installed correctly.", "VU Launcher - Error!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -345,11 +344,12 @@ namespace VU_Launcher
         // Manually install/update latest VU version
         void update_VU(object sender, RoutedEventArgs e)
         {
+            // Disable the GUI Buttons
             btnLaunch.IsEnabled = false;
             btnInstallVU.IsEnabled = false;
             
-            string vuPath = Settings.Default.vuPath;
             string name_downloadedFile = "VU_latest.zip";
+            string vuDownloadLink = "http://veniceunleashed.net/VeniceUnleashed.zip";
 
             WebClient client = new WebClient();
 
@@ -357,7 +357,7 @@ namespace VU_Launcher
             {
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-                client.DownloadFileAsync(new Uri("http://veniceunleashed.net/VeniceUnleashed.zip"), vuPath + name_downloadedFile);
+                client.DownloadFileAsync(new Uri(vuDownloadLink), _vuDir + name_downloadedFile);
             }
             catch (Exception exception)
             {
@@ -376,11 +376,10 @@ namespace VU_Launcher
         // Extract downloaded VU zip file
         void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            string vuPath = Settings.Default.vuPath;
             string nameDownloadedFile = "VU_latest.zip";
             try {
-                System.IO.Compression.ZipFile.ExtractToDirectory((vuPath + nameDownloadedFile), vuPath);
-                File.Delete(vuPath + nameDownloadedFile);
+                System.IO.Compression.ZipFile.ExtractToDirectory((_vuDir + nameDownloadedFile), _vuDir);
+                File.Delete(_vuDir + nameDownloadedFile);
             }
             catch (Exception ex)
             {
