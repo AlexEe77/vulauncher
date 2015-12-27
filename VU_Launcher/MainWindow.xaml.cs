@@ -349,6 +349,7 @@ namespace VU_Launcher
             btnInstallVU.IsEnabled = false;
             
             string name_downloadedFile = "VU_latest.zip";
+            string vuDownloadLink = "http://veniceunleashed.net/VeniceUnleashed.zip";
 
             WebClient client = new WebClient();
 
@@ -356,7 +357,7 @@ namespace VU_Launcher
             {
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                 client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-                client.DownloadFileAsync(new Uri("http://veniceunleashed.net/VeniceUnleashed.zip"), _vuDir + name_downloadedFile);
+                client.DownloadFileAsync(new Uri(vuDownloadLink), _vuDir + name_downloadedFile);
             }
             catch (Exception exception)
             {
